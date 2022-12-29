@@ -1,7 +1,7 @@
 {
-  "name": "desafio-6---websockets",
+  "name": "desafio-8---nuestra-primera-base-de-datos",
   "version": "1.0.0",
-  "description": "DESAFIO 5 - Motores de plantillas",
+  "description": "base de datos",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",

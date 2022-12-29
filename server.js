@@ -9,8 +9,6 @@ let path = require("path");
 let {Server: HttpServer} = require("http");
 let Socket = require("./src/utils/sockets");
 
-
-
 // Middlewares
 app.use(express.json());
 app.use(express.urlencoded({extended:true}));

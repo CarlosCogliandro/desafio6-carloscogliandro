@@ -1,4 +1,9 @@
 let { Server: SocketIO } = require("socket.io");
+const Container = require('../../contenedor/contenedor.js')
+const { MariaDB, SQLite3 } = require('../../../options/mysql.js');
+
+const products = new Container(SQLite3, 'productos');
+const messages = new Container(MariaDB, 'mensajes');
 
 class Socket {
   static instancia;
@@ -17,7 +22,22 @@ class Socket {
     try {
       this.io.on('connection', socket => {
         console.log("Usuario conectado!");
-        this.io.sockets.emit("init", this.mensajes);
+        const dbProducts = products.getAll();
+        this.io.sockets.emit("init", dbProducts);
+        const dbMessages = messages.getAll();
+        this.io.sockets.emit('init', dbMessages);
+
+        socket.on('product', async product => {
+          products.save(product);
+          const dbProducts = await products.getAll();
+          io.sockets.emit('products', dbProducts);
+        })
+
+        socket.on('message', async message => {
+          messages.save(message);
+          const dbMessages = await messages.getAll();
+          io.sockets.emit('messages', dbMessages);
+        })
 
         // Escuchamos el mensaje de un usuario y lo emitimos a todos los conectados
         socket.on("mensaje", data => {

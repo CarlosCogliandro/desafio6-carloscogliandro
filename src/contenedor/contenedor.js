@@ -164,64 +164,129 @@
 /* Importamos las dependencias */
 
 
+// const knex = require('knex');
+
+// class Container {
+//     constructor(config, tableName) {
+//         this.config = config;
+//         this.tableName = tableName;
+//         this.knex = knex(this.config);
+//     }
+//     save = obj => {
+//         this.knex(this.tableName).insert(obj)
+//             .then(() => console.log('Saved'))
+//             .catch(err => { console.log(err); throw err })
+//             .finally(() => this.knex.destroy())
+//     }
+//     getById = async id => {
+//         try {
+//             let obj = await this.knex.from(this.tableName).select().table(this.tableName).where('id', id).first();
+//             if (obj) {
+//                 return obj;
+//             } else {
+//                 return { message: 'ERROR' };
+//             }
+//         } catch (err) {
+//             return { message: 'ERROR' };
+//         }
+//     }
+//     getAll = async () => {
+//         try {
+//             let objs = await this.knex.from(this.tableName).select('*')
+//             return objs;
+//         } catch (err) {
+//             console.log(err);
+//             return [];
+//         }
+//     }
+//     deleteById = async id => {
+//         try {
+//             this.knex.from(this.tableName).where('id', '=', id).del()
+//             return { message: 'DONE!' };
+//         } catch (err) {
+//             return { message: 'ERROR' };
+//         }
+//     }
+//     deleteAll = async () => {
+//         try {
+//             this.knex.from(this.tableName).del()
+//             return { message: 'DONE!' }
+//         } catch (err) {
+//             return { message: 'ERROR' };
+//         }
+//     }
+//     update = async obj => {
+//         try {
+//             this.knex.from(this.tableName).update(obj).update()
+//             return { message: 'DONE!' };
+//         } catch (err) {
+//             return { message: 'ERROR' };
+//         }
+//     }
+// }
+
+// module.exports = Container;
+
+
 const knex = require('knex');
 
 class Container {
-    constructor(config, tableName) {
-        this.config = config;
-        this.tableName = tableName;
-        this.knex = knex(this.config);
+
+    constructor(config, tabla) {
+        this.knex = knex(config)
+        this.tabla = tabla
     }
-    save = obj => {
-        this.knex(this.tableName).insert(obj)
-            .then(() => console.log('Saved'))
-            .catch(err => { console.log(err); throw err })
-            .finally(() => this.knex.destroy())
-    }
-    getById = async id => {
+
+    async getById(id) {
         try {
-            let obj = await this.knex.from(this.tableName).select().table(this.tableName).where('id', id).first();
-            if (obj) {
-                return obj;
-            } else {
-                return { message: 'ERROR' };
-            }
-        } catch (err) {
-            return { message: 'ERROR' };
+            return this.knex.select('*').from(this.tabla).where('id', id)
+        } catch (error) {
+            throw new Error(`Error al listar por id: ${error}`)
         }
     }
-    getAll = async () => {
+
+    async getAll() {
         try {
-            let objs = await this.knex.from(this.tableName).select('*')
-            return objs;
-        } catch (err) {
-            console.log(err);
-            return [];
+            return this.knex.select('*').from(this.tabla)
+        } catch (error) {
+            throw new Error(`Error al listar todo: ${error}`)
         }
     }
-    deleteById = async id => {
+
+    async save(elem) {
         try {
-            this.knex.from(this.tableName).where('id', '=', id).del()
-            return { message: 'DONE!' };
-        } catch (err) {
-            return { message: 'ERROR' };
+            return this.knex.insert(elem).into(this.tabla)
+        } catch (error) {
+            throw new Error(`Error al guardar: ${error}`)
         }
     }
-    deleteAll = async () => {
+
+    async update(elem, id) {
         try {
-            this.knex.from(this.tableName).del()
-            return { message: 'DONE!' }
-        } catch (err) {
-            return { message: 'ERROR' };
+            return this.knex.from(this.tabla).where('id', id).update(elem)
+        } catch (error) {
+            throw new Error(`Error al borrar: ${error}`)
         }
     }
-    update = async obj => {
+
+    async delete(id) {
         try {
-            this.knex.from(this.tableName).update(obj).update()
-            return { message: 'DONE!' };
-        } catch (err) {
-            return { message: 'ERROR' };
+            return this.knex.delete().from(this.tabla).where('id', id)
+        } catch (error) {
+            throw new Error(`Error al borrar: ${error}`)
         }
+    }
+
+    async deleteAll() {
+        try {
+            return this.knex.delete().from(this.tabla)
+        } catch (error) {
+            throw new Error(`Error al borrar: ${error}`)
+        }
+    }
+
+    async disconnect() {
+        await this.knex.destroy();
     }
 }
 

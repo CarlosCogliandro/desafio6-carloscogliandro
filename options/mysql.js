@@ -16,4 +16,4 @@ const MariaDB = {
 	}
 }
 
-module.exports = { SQLite3, MariaDB };
+export default { SQLite3, MariaDB };

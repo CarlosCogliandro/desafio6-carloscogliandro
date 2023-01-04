@@ -5,9 +5,8 @@ const PORT = process.env.PORT || 8080;
 let serverRoutes = require('./src/routes');
 
 // Socket
-let path = require("path");
 let {Server: HttpServer} = require("http");
-let Socket = require("./src/utils/sockets");
+// let Socket = require("./src/utils/sockets");
 
 // Middlewares
 app.use(express.json());
@@ -24,10 +23,8 @@ serverRoutes(app);
 
 let httpServer = new HttpServer(app);
 
-let socket = new Socket(httpServer);
-socket.init();
-
-
+// let io = new Socket(httpServer);
+// io.init();
 
 const connectedServer = httpServer.listen(PORT, ()=> console.log(`Server ON By Carlos Cogliandro------> http://localhost:${PORT}`));
 connectedServer.on('Error al conectar ----->', (error) => {console.log(error)});

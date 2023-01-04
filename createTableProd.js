@@ -15,16 +15,16 @@ const knex = require('knex')(MariaDB);
 //     })
 
 try {
-    await knex.schema.dropTableIfExists('productos')
+     knex.schema.dropTableIfExists('productos')
 
-    await knex.schema.createTable('productos', table => {
+     knex.schema.createTable('productos', table => {
         table.increments('id').primary()
         table.string('title', 30).notNullable()
         table.float('price').notNullable()
         table.string('thumbnail', 1024)
     })
 
-    await knex.destroy()
+     knex.destroy()
 
     console.log('tabla productos en mariaDb creada con éxito')
 } catch (error) {

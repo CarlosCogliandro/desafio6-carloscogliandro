@@ -15,16 +15,16 @@ const knex = require('knex')(SQLite3);
 //     })
 
 try {
-    await knex.schema.dropTableIfExists('mensajes')
+     knex.schema.dropTableIfExists('mensajes')
 
-    await knex.schema.createTable('mensajes', table => {
+     knex.schema.createTable('mensajes', table => {
         table.increments('id').primary()
         table.string('email', 30)
         table.string('message', 128)
         table.string('date', 50)
     })
 
-    await knex.destroy()
+     knex.destroy()
 
     console.log('tabla mensajes en sqlite3 creada con éxito')
 } catch (error) {
